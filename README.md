@@ -14,7 +14,7 @@ A productivity timer with Three.js visualization featuring:
 
 ## 📦 Installation
 ```bash
-https://github.com/Sandipan2005/Timer-3D.git
+git clone https://github.com/Sandipan2005/Timer-3D.git
 cd Timer-3D
 # Install live server (if needed)
 npm install -g live-server
