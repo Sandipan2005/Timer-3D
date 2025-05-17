@@ -1,4 +1,4 @@
- // --- Three.js Scene Setup ---
+// --- Three.js Scene Setup ---
  let scene, camera, renderer, centralObject, particles; 
  const threeJsCanvas = document.getElementById('threejs-canvas');
  const modeColors = { Work: new THREE.Color(0x4a90e2), 'Short Break': new THREE.Color(0x50e3c2), 'Long Break': new THREE.Color(0x7ed321) };
@@ -174,7 +174,7 @@
  }
  
  // --- Project Time Distribution Chart ---
- const PIE_CHART_COLORS = ["#6c5ce7", "#fd79a8", "#00b894", "#ffeaa7", "#fab1a0", "#74b9ff", "#e17055", "#0984e3", "#d63031", "#2d3436"];
+ const PIE_CHART_COLORS = ["#4a90e2", "#fd79a8", "#00b894", "#74b9ff", "#0984e3", "#e17055", "#50e3c2", "#7ed321", "#d63031", "#2d3436"];
 
  function getTaskDataForPeriod(logs, period) {
      const today = new Date();
@@ -229,9 +229,9 @@
          return;
      }
 
-     const cx = 100; 
-     const cy = 100; 
-     const radius = 80; 
+     const cx = 120; 
+    const cy = 120; 
+    const radius = 80; 
      let startAngle = 0;
      let colorIndex = 0;
 
@@ -278,12 +278,22 @@
          pieChartSvgEl.appendChild(slice);
 
          const legendItem = document.createElement('div');
-         legendItem.className = 'legend-item';
-         const colorBox = document.createElement('div');
-         colorBox.className = 'legend-color-box';
-         colorBox.style.backgroundColor = PIE_CHART_COLORS[colorIndex % PIE_CHART_COLORS.length];
-         const legendText = document.createElement('span');
-         legendText.textContent = `${taskName} (${(percentage * 100).toFixed(1)}%)`;
+        legendItem.className = 'legend-item';
+        legendItem.style.margin = '8px 0';
+        legendItem.style.display = 'flex';
+        legendItem.style.alignItems = 'center';
+        const colorBox = document.createElement('div');
+        colorBox.className = 'legend-color-box';
+        colorBox.style.backgroundColor = PIE_CHART_COLORS[colorIndex % PIE_CHART_COLORS.length];
+        colorBox.style.width = '16px';
+        colorBox.style.height = '16px';
+        colorBox.style.marginRight = '10px';
+        colorBox.style.borderRadius = '4px';
+        const legendText = document.createElement('span');
+        legendText.textContent = `${taskName} (${(percentage * 100).toFixed(1)}%)`;
+        legendText.style.fontSize = '0.9rem';
+        legendText.style.color = '#ffffff';
+        legendText.style.fontWeight = 'bold';
          
          legendItem.appendChild(colorBox);
          legendItem.appendChild(legendText);
@@ -311,16 +321,22 @@
      let totalPomodorosAllTime = 0;
      let totalFocusTimeToday = 0;
      let pomodorosTodayCount = 0;
+     let totalSessionsToday = 0;
      const todayDateStr = new Date().toISOString().split('T')[0];
+     const now = new Date();
+     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString().split('T')[0];
 
      logs.forEach(log => {
          if (log.mode === 'Work') {
              totalFocusTimeAllTime += log.duration;
              totalPomodorosAllTime++;
-             if (log.date === todayDateStr) {
+             if (log.date === todayStart) {
                  totalFocusTimeToday += log.duration;
                  pomodorosTodayCount++;
              }
+         }
+         if (log.date === todayStart) {
+             totalSessionsToday++;
          }
      });
 
@@ -328,6 +344,8 @@
      reportTotalPomodorosEl.textContent = totalPomodorosAllTime;
      reportTodayFocusTimeEl.textContent = formatDurationForDisplay(totalFocusTimeToday);
      reportTodayPomodorosEl.textContent = pomodorosTodayCount;
+     settingsCycleSessionsDisplay.textContent = `${cycleSessions}/${longBreakInterval}`;
+     settingsTotalSessionsDisplay.textContent = totalSessionsToday;
 
      recentPomodorosListEl.innerHTML = ''; 
      const recentLogs = logs.filter(log => log.mode === 'Work').slice(-5).reverse(); 
