@@ -389,6 +389,7 @@
      } catch (e) { console.error("Error loading settings from localStorage:", e); currentTask = "-"; }
      settingsCurrentTaskInput.value = (currentTask === "-") ? "" : currentTask; 
      applySettings(); 
+      loadAndDisplayReportData();
  }
 
  function saveSettings() {
